@@ -22,6 +22,7 @@ class Particle {
         c.closePath();
     };
     update() {
+        this.x += 1;
         this.draw();
     }
 }
