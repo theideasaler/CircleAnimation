@@ -3,7 +3,21 @@ import $ from 'jquery';
 
 let canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
-
+let colorArray = [
+    '#133046',
+    '#15959F',
+    '#F1E4B3',
+    '#F4A090',
+    '#F26144'
+];
+let mouse = {
+    x: undefined,
+    y: undefined
+};
+window.addEventListener('mousemove', event => {
+    mouse.x = event.x;
+    mouse.y = event.y;
+});
 let middleX = window.innerWidth / 2;
 let middleY = window.innerHeight / 2;
 
@@ -11,14 +25,14 @@ canvas.height = 2 * middleY;
 canvas.width = 2 * middleX;
 
 class Particle {
-    constructor(x, y, radius, color) {
+    constructor(x, y, radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.color = color;
+        this.color = colorArray[Math.floor(Math.random() * colorArray.length)];
         this.radians = Math.random() * Math.PI *2;
-        this.velocity = 0.05;
-        this.circleRadius = getRange(80, 160);
+        this.velocity = 0.02;
+        this.circleRadius = getRange(50, 120);
     }
     update() {
         this.x = middleX + Math.cos(this.radians) * this.circleRadius;
@@ -45,8 +59,8 @@ const init = () => {
     canvas.height = 2 * middleY;
     canvas.width = 2 * middleX;
     particles = [];
-    for (let i = 0; i < 50; i++) {
-        particles.push(new Particle(middleX, middleY, 5, 'red'));
+    for (let i = 0; i < 650; i++) {
+        particles.push(new Particle(mouse.x, mouse.y, 5));
     }
 
 };
