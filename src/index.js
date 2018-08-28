@@ -12,6 +12,13 @@ class Particle {
         this.y = y;
         this.radius = radius;
         this.color = color;
+        this.radians = 0;
+        this.velocity = 0.05;
+    }
+    update() {
+        this.x = this.x + Math.cos(this.radians) * 10;
+        this.radians += this.velocity;
+        this.draw();
     }
     draw() {
         c.beginPath();
@@ -21,24 +28,20 @@ class Particle {
         c.fill();
         c.closePath();
     };
-    update() {
-        this.x += 1;
-        this.draw();
-    }
 }
 
 let particles;
 const init = () => {
     particles = [];
-    for(let i = 0; i < 400; i++ ){
-        particles.push(new Particle(canvas.width/2, canvas.height/2, 5, 'red'));
+    for (let i = 0; i < 400; i++) {
+        particles.push(new Particle(canvas.width / 2, canvas.height / 2, 5, 'red'));
     }
-    
+
 };
 
 const animate = () => {
     requestAnimationFrame(animate);
-    c.clearRect(0, 0, canvas.width, canvas.height );
+    c.clearRect(0, 0, canvas.width, canvas.height);
     particles.forEach(particle => {
         particle.update();
     });
@@ -47,5 +50,11 @@ const animate = () => {
 $(() => {
     init();
     animate();
+    $(window).on('resize', () => {
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        console.log("window size changed");
+        init();
+    });
 });
 
