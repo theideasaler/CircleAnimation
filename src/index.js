@@ -2,9 +2,13 @@ import './index.scss';
 import $ from 'jquery';
 
 let canvas = document.querySelector('canvas');
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
 const c = canvas.getContext('2d');
+
+let middleX = window.innerWidth / 2;
+let middleY = window.innerHeight / 2;
+
+canvas.height = 2 * middleY;
+canvas.width = 2 * middleX;
 
 class Particle {
     constructor(x, y, radius, color) {
@@ -16,7 +20,8 @@ class Particle {
         this.velocity = 0.05;
     }
     update() {
-        this.x = this.x + Math.cos(this.radians) * 10;
+        this.x = middleX + Math.cos(this.radians) * 100;
+        this.y = middleY + Math.sin(this.radians) * 100;
         this.radians += this.velocity;
         this.draw();
     }
@@ -32,9 +37,13 @@ class Particle {
 
 let particles;
 const init = () => {
+    middleX = window.innerWidth / 2;
+    middleY = window.innerHeight / 2;
+    canvas.height = 2 * middleY;
+    canvas.width = 2 * middleX;
     particles = [];
     for (let i = 0; i < 400; i++) {
-        particles.push(new Particle(canvas.width / 2, canvas.height / 2, 5, 'red'));
+        particles.push(new Particle(middleX, middleY, 5, 'red'));
     }
 
 };
@@ -51,9 +60,6 @@ $(() => {
     init();
     animate();
     $(window).on('resize', () => {
-        canvas.height = window.innerHeight;
-        canvas.width = window.innerWidth;
-        console.log("window size changed");
         init();
     });
 });
