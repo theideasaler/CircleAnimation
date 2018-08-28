@@ -16,12 +16,13 @@ class Particle {
         this.y = y;
         this.radius = radius;
         this.color = color;
-        this.radians = 0;
+        this.radians = Math.random() * Math.PI *2;
         this.velocity = 0.05;
+        this.circleRadius = getRange(80, 160);
     }
     update() {
-        this.x = middleX + Math.cos(this.radians) * 100;
-        this.y = middleY + Math.sin(this.radians) * 100;
+        this.x = middleX + Math.cos(this.radians) * this.circleRadius;
+        this.y = middleY + Math.sin(this.radians) * this.circleRadius;
         this.radians += this.velocity;
         this.draw();
     }
@@ -35,6 +36,8 @@ class Particle {
     };
 }
 
+let getRange = (min, max) => min + (max -min) * Math.random();
+
 let particles;
 const init = () => {
     middleX = window.innerWidth / 2;
@@ -42,7 +45,7 @@ const init = () => {
     canvas.height = 2 * middleY;
     canvas.width = 2 * middleX;
     particles = [];
-    for (let i = 0; i < 400; i++) {
+    for (let i = 0; i < 50; i++) {
         particles.push(new Particle(middleX, middleY, 5, 'red'));
     }
 
