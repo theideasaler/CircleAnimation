@@ -31,19 +31,21 @@ class Particle {
         this.radius = radius;
         this.color = colorArray[Math.floor(Math.random() * colorArray.length)];
         this.radians = Math.random() * Math.PI *2;
-        this.velocity = 0.02;
-        this.circleRadius = getRange(50, 120);
+        this.velocity = 0.05;
+        this.circleRadius = {
+            distanceX: getRange(80, 180),
+            distanceY: getRange(80, 180)
+        };
     }
     update() {
-        this.x = middleX + Math.cos(this.radians) * this.circleRadius;
-        this.y = middleY + Math.sin(this.radians) * this.circleRadius;
+        this.x = middleX + Math.cos(this.radians) * this.circleRadius.distanceX;
+        this.y = middleY + Math.sin(this.radians) * this.circleRadius.distanceY;
         this.radians += this.velocity;
         this.draw();
     }
     draw() {
         c.beginPath();
         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        c.strokeStyle = this.color;
         c.fillStyle = this.color;
         c.fill();
         c.closePath();
@@ -59,15 +61,18 @@ const init = () => {
     canvas.height = 2 * middleY;
     canvas.width = 2 * middleX;
     particles = [];
-    for (let i = 0; i < 650; i++) {
+    for (let i = 0; i < 66; i++) {
         particles.push(new Particle(mouse.x, mouse.y, 5));
     }
-
+    
 };
 
 const animate = () => {
     requestAnimationFrame(animate);
-    c.clearRect(0, 0, canvas.width, canvas.height);
+    //put a 0.1 transparent layer on the top of previous layer and circle, 
+    //so the 10th time the first layer will be totaly transparent
+    c.fillStyle = 'rgba(255, 255, 255, 0.1)';
+    c.fillRect(0, 0, canvas.width, canvas.height);
     particles.forEach(particle => {
         particle.update();
     });
