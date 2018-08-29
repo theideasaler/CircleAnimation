@@ -10,16 +10,20 @@ let colorArray = [
     '#F4A090',
     '#F26144'
 ];
+let middleX = window.innerWidth / 2;
+let middleY = window.innerHeight / 2;
 let mouse = {
-    x: undefined,
-    y: undefined
+    x: middleX,
+    y: middleY
 };
+let becomeCircleFlag = false;
 window.addEventListener('mousemove', event => {
+    
+    if(isNaN(mouse.x)) { mouse.x = middleX; }
+    if(isNaN(mouse.y)) { mouse.y = middleY; }
     mouse.x = event.x;
     mouse.y = event.y;
 });
-let middleX = window.innerWidth / 2;
-let middleY = window.innerHeight / 2;
 
 canvas.height = 2 * middleY;
 canvas.width = 2 * middleX;
@@ -33,21 +37,37 @@ class Particle {
         this.radians = Math.random() * Math.PI *2;
         this.velocity = 0.05;
         this.circleRadius = {
-            distanceX: getRange(80, 180),
-            distanceY: getRange(80, 180)
+            distanceX: getRange(50, 180),
+            distanceY: getRange(50, 180)
+        };
+        this.lastMousePosition = {
+            x: x,
+            y: y
         };
     }
     update() {
-        this.x = middleX + Math.cos(this.radians) * this.circleRadius.distanceX;
-        this.y = middleY + Math.sin(this.radians) * this.circleRadius.distanceY;
+        const lastPoint = {
+            x: this.x,
+            y: this.y
+        };
+        // //drag effects
+        this.lastMousePosition.x += (mouse.x - this.lastMousePosition.x) * 0.25;
+        this.lastMousePosition.y += (mouse.y - this.lastMousePosition.y) * 0.25;
+        this.x = this.lastMousePosition.x + Math.cos(this.radians) * this.circleRadius.distanceX;
+        this.y = this.lastMousePosition.y + Math.sin(this.radians) * this.circleRadius.distanceY;
         this.radians += this.velocity;
-        this.draw();
+        this.draw(lastPoint);
     }
-    draw() {
+    draw(lastPoint) {
         c.beginPath();
-        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        c.fillStyle = this.color;
-        c.fill();
+        // c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        // c.fillStyle = this.color;
+        // c.fill();
+        c.strokeStyle = this.color;
+        c.lineWidth = this.radius;
+        c.moveTo(lastPoint.x, lastPoint.y);
+        c.lineTo(this.x, this.y);
+        c.stroke();
         c.closePath();
     };
 }
@@ -61,8 +81,9 @@ const init = () => {
     canvas.height = 2 * middleY;
     canvas.width = 2 * middleX;
     particles = [];
-    for (let i = 0; i < 66; i++) {
-        particles.push(new Particle(mouse.x, mouse.y, 5));
+    for (let i = 0; i < 120; i++) {
+        const randomRadius = getRange(2,8);
+        particles.push(new Particle(mouse.x, mouse.y, randomRadius));
     }
     
 };
@@ -84,5 +105,23 @@ $(() => {
     $(window).on('resize', () => {
         init();
     });
+    let interval;
+    $(window).on('mousedown', () => {
+        console.log(becomeCircleFlag);
+        becomeCircleFlag = true;
+        interval = setInterval(() => {
+            console.log("mousedown");
+        }, 200);
+        return false;
+    });
+    $(window).on('mouseup', () => {
+        console.log(becomeCircleFlag);
+        becomeCircleFlag = false;
+        clearInterval(interval);
+        console.log(becomeCircleFlag);
+        return false;
+    });
+
+
 });
 
