@@ -55,6 +55,11 @@ class Particle {
         this.lastMousePosition.y += (mouse.y - this.lastMousePosition.y) * 0.25;
         this.x = this.lastMousePosition.x + Math.cos(this.radians) * this.circleRadius.distanceX;
         this.y = this.lastMousePosition.y + Math.sin(this.radians) * this.circleRadius.distanceY;
+        if(becomeCircleFlag){
+            let certainRadius = Math.sqrt(Math.pow(Math.cos(this.radians) * this.circleRadius.distanceX, 2) + Math.pow(Math.sin(this.radians) * this.circleRadius.distanceY, 2));
+            this.circleRadius.distanceX = certainRadius;
+            this.circleRadius.distanceY = certainRadius;
+        }
         this.radians += this.velocity;
         this.draw(lastPoint);
     }
