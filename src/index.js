@@ -37,12 +37,16 @@ class Particle {
         this.radians = Math.random() * Math.PI *2;
         this.velocity = 0.05;
         this.circleRadius = {
-            distanceX: getRange(50, 180),
-            distanceY: getRange(50, 180)
+            distanceX: getRange(30, 270),
+            distanceY: getRange(30, 270)
         };
         this.lastMousePosition = {
             x: x,
             y: y
+        };
+        this.storedPreviousRadius = {
+            storedX: this.circleRadius.distanceX,
+            storedY: this.circleRadius.distanceY
         };
     }
     update() {
@@ -59,6 +63,9 @@ class Particle {
             let certainRadius = Math.sqrt(Math.pow(Math.cos(this.radians) * this.circleRadius.distanceX, 2) + Math.pow(Math.sin(this.radians) * this.circleRadius.distanceY, 2));
             this.circleRadius.distanceX = certainRadius;
             this.circleRadius.distanceY = certainRadius;
+        }else {
+            this.circleRadius.distanceX = this.storedPreviousRadius.storedX;
+            this.circleRadius.distanceY = this.storedPreviousRadius.storedY;
         }
         this.radians += this.velocity;
         this.draw(lastPoint);
